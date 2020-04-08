@@ -1,0 +1,37 @@
+# AppCenter testing - Release config
+
+trigger:
+  - develop
+  - master
+resources:
+  pipelines:
+    - pipeline: 'build_pipeline'
+      project: gmobile-2.0
+      source: 'Gmobile-2.0-Package-Release'
+
+jobs:
+  - job: iOS_Testing
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - template: test-template.yml
+        parameters:
+          Platform: 'iOS'
+          TestDevices: 'Gilead-Mobile-Apps/$(iOSTestDevices)'
+          AppName: 'Gilead-Mobile-Apps/gmobile-2.0-ios'
+          AppCenterToken: '$(AppCenterToken)'
+          AppPath: '/path/to/app.app'
+          # DeviceName: 'generic'
+
+  - job: Android_Testing
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - template: test-template.yml
+        parameters:
+          Platform: 'Android'
+          TestDevices: 'Gilead-Mobile-Apps/$(AndroidTestDevices)'
+          AppName: 'Gilead-Mobile-Apps/gmobile-2.0-android'
+          AppCenterToken: '$(AppCenterToken)'
+          AppPath: '/path/to/app.apk'
+          # DeviceName: 'generic'

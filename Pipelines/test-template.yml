@@ -1,0 +1,100 @@
+#
+# This is a template used for Appium testing in AppCenter
+#
+parameters:
+  Platform: ''
+  TestDevices: ''
+  AppName: ''
+  AppCenterToken: ''
+  AppPath: ''
+  DeviceName: 'generic'
+
+steps:
+  # Download the artifacts (packages)
+  - download: 'build_pipeline'
+    displayName: Downloading packages
+    artifact: Packages
+
+  # Get the package location and set a variable for later use
+  - task: PowerShell@2
+    displayName: Compute package location
+    inputs:
+      targetType: 'inline'
+      script: |
+        if ("${{ parameters.Platform }}" -eq "Android") {
+          $extension = ".apk"
+        } elseIf ("${{ parameters.Platform }}" -eq "iOS") {
+          $extension = ".ipa"
+        } else {
+          Write-Host "Platform is 'iOS' or 'Android' is not specified. Can't get package location!"
+          exit 1
+        }
+
+        $packageLocation = $(Get-ChildItem D:\a\1/build_pipeline -Recurse| Where {$_.Extension -like $extension}).FullName
+        Write-Host "Package location is $packageLocation"
+        Write-Host ("##vso[task.setvariable variable=PackageLocation;]$packageLocation")
+      errorActionPreference: 'silentlyContinue'
+      pwsh: true
+
+  # Get the package location and set a variable for later use
+  - task: PowerShell@2
+    displayName: Inject device data in Java files
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "Injecting data..."
+        $genericPlatform = "genericPlatformName"
+        $genericDevice = "genericDeviceName"
+        $genericPath = "genericAppPath"
+
+        $testInfoHash = @{$genericPlatform = "${{ parameters.Platform }}"; $genericDevice = "${{ parameters.DeviceName }}"; $genericPath = "${{ parameters.AppPath}}"}
+        Get-ChildItem -Path . -Filter *.java -Recurse | where { !$_.PSIsContainer } | % {
+          $file = Get-Content $_.FullName
+          foreach ($key in $testInfoHash.Keys) {
+            $containsWord = $file | %{$_ -match $key}
+            if ($containsWord -contains $true) {
+              ((Get-Content -Path $_.FullName -Raw) -replace $key,$testInfoHash[$key]) | Set-Content -Path $_.FullName
+            }
+          }
+        }
+      pwsh: true
+
+  # Install appcenter CLI
+  - task: UseNode@1
+    inputs:
+      checkLatest: true
+  - task: Npm@1
+    displayName: 'Installing AppCenter CLI'
+    inputs:
+      command: 'custom'
+      customCommand: 'install -g appcenter-cli'
+
+  # Compile appium tests
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      options: '-DskipTests -P prepare-for-upload'
+      publishJUnitResults: false
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+
+  # Test package in AppCenter
+  - task: PowerShell@2
+    displayName: 'Testing package in AppCenter'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Starting the testing
+        appcenter login --token "${{ parameters.AppCenterToken }}"
+        Write-Host "Final appcenter cmd is"
+        Write-Host "appcenter test run appium --app ${{ parameters.AppName }} --devices ${{ parameters.TestDevices }} --app-path $(PackageLocation) --test-series master --locale en_US --build-dir target/upload"
+        appcenter test run appium --app ${{ parameters.AppName }} --devices ${{ parameters.TestDevices }} --app-path $(PackageLocation) --test-series master --locale en_US --build-dir target/upload
+        if ($? -eq $false) {
+          exit $LASTEXITCODE
+        }
+        appcenter logout
+      failOnStderr: true
+      pwsh: true

@@ -1,0 +1,37 @@
+# AppCenter testing - Debug config
+
+trigger:
+  - develop
+  - master
+resources:
+  pipelines:
+    - pipeline: 'build_pipeline'
+      project: gmobile-2.0
+      source: 'Gmobile-2.0-Package-Debug'
+
+jobs:
+  - job: iOS_Testing
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - template: test-template.yml
+        parameters:
+          Platform: 'iOS'
+          TestDevices: 'Gilead-Mobile-Apps/$(iOSTestDevices)'
+          AppName: 'Gilead-Mobile-Apps/gmobile-2.0-ios-debug'
+          AppCenterToken: '$(AppCenterToken)'
+          AppPath: '/path/to/app.app'
+          # DeviceName: 'generic'
+
+  - job: Android_Testing
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - template: test-template.yml
+        parameters:
+          Platform: 'Android'
+          TestDevices: 'Gilead-Mobile-Apps/$(AndroidTestDevices)'
+          AppName: 'Gilead-Mobile-Apps/gmobile-2.0-android-debug'
+          AppCenterToken: '$(AppCenterToken)'
+          AppPath: '/path/to/app.apk'
+          # DeviceName: 'generic'
