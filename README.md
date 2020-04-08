@@ -84,6 +84,11 @@ appium-doctor
 3. mvn clean test -Dplatform=ios   
 4. mvn clean test -Dplatform=android
 
+FIX_ME   
+Need to have the following running before running tests
+1. Appium Server started
+2. Android emulator started in background
+3. Ios Simulator started in background
 
 #### Example python tests
 There are also a couple of python tests in this project as as reference also   

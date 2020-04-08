@@ -83,11 +83,12 @@ public class LoginTest {
         System.out.println("initAndroid() method called");
         attributeTextValue = "text";
         attributeEnabledValue = "enabled";
+        File app = new File(androidApp);
         capabilities = new DesiredCapabilities();
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
-        capabilities.setCapability(MobileCapabilityType.APP, androidApp);
+        capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
 
         mobileDriver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
