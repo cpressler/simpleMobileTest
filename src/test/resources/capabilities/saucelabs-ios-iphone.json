@@ -1,0 +1,9 @@
+{
+  "platformName": "iOS",
+  "platformVersion": "13.4.1",
+  "deviceName": "iPhone .*",
+  "testobject_api_key": "B2E2AC45AA414B3E88E7C697E0562076",
+  "testobject_session_creation_timeout": "200000",
+  "testobject_app_id":"2",
+  "name": "myfirsttest"
+}

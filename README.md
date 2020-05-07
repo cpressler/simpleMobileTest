@@ -131,7 +131,7 @@ $ANDROID_HOME/tools/emulator -avd Nexus_S_API_28 & << must have this defined in 
  * mvn test -Dplatform=android -Dtestsite=local -Dcapability=capabilities/local-android-nexus-s-api28.json
  * mvn test -Dplatform=android -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-android-google-pixel.json
  * mvn test -Dplatform=ios -Dtestsite=local  -Dcapability=capabilities/local-ios-iphone11-13.4.json
- * mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/sauce-ios-iphone11-13.4.json ( not working yet)
+ * mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-ios-iphone.json ( not working yet)
 
 
 #### Example python tests
