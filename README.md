@@ -126,13 +126,12 @@ $ANDROID_HOME/tools/emulator -avd Nexus_S_API_28 & << must have this defined in 
 1. make sure appium server is running by running from Mac Searchlight
 2. Verify Appium launches and select "Start Server X.xx.x"
 3. Verify Emualtor is running for IOS/Android
-3. Change to project root directory ( where pom.xml is)
-3. mvn clean test -Dplatform=ios 
-4. mvn clean test -Dplatform=android
-5. mvn test -Dplatform=android -Dtestsite=local -Dcapability=capabilities/local-android-nexus-s-api28.json
-6. mvn test -Dplatform=android -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-android-nexus-s-api28.json
-7. mvn test -Dplatform=ios -Dtestsite=local  -Dcapability=capabilities/local-ios-iphone11-13.4.json
-8. mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/sauce-ios-iphone11-13.4.json
+4. Change to project root directory ( where pom.xml is)
+5. Choose one of the following to run
+ * mvn test -Dplatform=android -Dtestsite=local -Dcapability=capabilities/local-android-nexus-s-api28.json
+ * mvn test -Dplatform=android -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-android-google-pixel.json
+ * mvn test -Dplatform=ios -Dtestsite=local  -Dcapability=capabilities/local-ios-iphone11-13.4.json
+ * mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/sauce-ios-iphone11-13.4.json ( not working yet)
 
 
 #### Example python tests
