@@ -1,0 +1,9 @@
+{
+  "platformName": "iOS",
+  "platformVersion": "13.4",
+  "deviceName": "iPhone 11",
+  "browserName": "",
+  "orientation" : "PORTRAIT",
+  "automationName": "XCUITest",
+  "app": "src/test/resources/ios/myApp.zip"
+}

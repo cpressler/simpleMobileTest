@@ -1,0 +1,8 @@
+{
+  "platformName": "Android",
+  "platformVersion": "9.0",
+  "deviceName": "Nexus S API 28",
+  "browserName": "",
+  "deviceOrientation" : "Portrait",
+  "app": "/Users/chesterpressler/development/appium/loginSimpleExample/simpleMobileTest/src/test/resources/android/app-debug.apk"
+}

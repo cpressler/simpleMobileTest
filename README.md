@@ -1,4 +1,7 @@
-
+# Simple Appium Test Example
+ For local or saucelabs.   
+ 
+ The is a simple mobile app test that can test both a one page login app for iOS and Android
 
 ## Appium
 http://appium.io/
@@ -76,24 +79,61 @@ npm install -g appium-doctor
 appium-doctor
 ```
 
-## Running the tests
+## Configuration and Conventions
+
+**Application Files**
+/src/test/resources/android  /ios
+The are the application file that will be uploaded for testing
+
+**Capabilitiy files**
+/src/test/resources/capabilities
+These files are JSON file of capabilities to load for a test. They are prefixed with the naming convention
+local- for testing with a local Appium server and saucelabs- for a configuration to test with saucelabs service.   
+
+**Saucelabs Service**
+saucelabs.properties contains configuration of items used to setup the properties used by saucelabs to connect.
+
+**General Properties**
+config.properties are used for any other properties needed by the application
+
+## Before Running the Tests
+We need to make sure the emulators are running for the platform we are using and also the Appium Server
+
+### Appium Server
+run it from the app launcher on Mac OS
+
+or from a terminal window
+```bash
+ appium &
+```
+
+
+### IOS Simulator
+```bash
+open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/
+```
+
+### Android Emulator
+```bash
+$ANDROID_HOME/tools/emulator -list-avds 
+Android_Accelerated_Oreo
+Nexus_S_API_28
+
+$ANDROID_HOME/tools/emulator -avd Nexus_S_API_28 & << must have this defined in android studio
+```
+## Running the tests in maven 
 
 1. make sure appium server is running by running from Mac Searchlight
 2. Verify Appium launches and select "Start Server X.xx.x"
+3. Verify Emualtor is running for IOS/Android
 3. Change to project root directory ( where pom.xml is)
-3. mvn clean test -Dplatform=ios   
+3. mvn clean test -Dplatform=ios 
 4. mvn clean test -Dplatform=android
-5. mvn test -Dplatform=android -Dtestsite=local
-6. mvn test -Dplatform=android -Dtestsite=saucelabs
-7. mvn test -Dplatform=ios -Dtestsite=local
-8. mvn test -Dplatform=ios -Dtestsite=saucelabs
+5. mvn test -Dplatform=android -Dtestsite=local -Dcapability=capabilities/local-android-nexus-s-api28.json
+6. mvn test -Dplatform=android -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-android-nexus-s-api28.json
+7. mvn test -Dplatform=ios -Dtestsite=local  -Dcapability=capabilities/local-ios-iphone11-13.4.json
+8. mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/sauce-ios-iphone11-13.4.json
 
-FIX_ME   
-Need to have the following running before running tests
-1. Appium Server started
-2. Android emulator started in background  
-    ~/Libary/Android/sdk/tool directory ->  emulator -avd Pixal_3a_API_29
-3. Ios Simulator started in background
 
 #### Example python tests
 There are also a couple of python tests in this project as as reference also   
@@ -110,6 +150,36 @@ npm install -g appium  # get appium
 npm install wd         # get appium client   
 appium &               # start appium   
 node your-appium-test.js
+
+### Desired Capabilities
+These are used to specify the capabilities to test against.
+
+**IOS**
+src/test/resources/capabilities/local-ios-iphone11-13.4.json
+**Android** 
+src/test/resources/capabilities/local-android-nexus-s-api28.json
+
+More info    
+https://kobiton.com/book/chapter-3-understanding-the-desired-capabilities/
+
+### Loading files up to saucelabs
+
+Show files loaded on sauce storage
+
+```bash
+curl -u "wgentry":"access-key-xxxxxxxxxxxxxxx"          "https://saucelabs.com/rest/v1/storage/wgentry"
+{"files":[]}
+```
+
+Or you can also use the UI to upload an APK or IPA file
+
+
+Put file uploaded
+
+```bash
+curl -u "wgentry":"878132eb-dfaa-XXXXXXXXXXX"          -X POST          -H 'Content-Type: application/octet-stream'          --data-binary src/test/resources/andriod/app-debug.apk          "https://saucelabs.com/rest/v1/storage/wgentry/app-debug.apk?overwrite=true"
+```
+
 
 #### Issue
 Connection refused (Connection refused)
@@ -154,3 +224,30 @@ Start Appium Server
 
 ####Fix
 Start the emulator
+
+#### Issue
+ Stderr: 'adb: failed to install 
+ 
+ #### Fix
+ 
+ https://stackoverflow.com/questions/25274296/adb-install-fails-with-install-failed-test-only
+ 
+ add this line to your ‘gradle.properties’
+ 
+ I have solved the issue by adding the "android:testOnly" property to android manifest's tag.
+ 
+  <application
+     .....
+     android:testOnly="false"
+     
+ 
+ android.injected.testOnly=false
+ 
+ Rebuild the project APK
+ 
+ 
+ ## SAUCELABS
+ 
+ testObjectKey : include in the deviceCapabilities
+ 
+   https://us1-manul.app.testobject.com/wd/hub

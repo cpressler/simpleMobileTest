@@ -1,0 +1,9 @@
+{
+  "platformName": "Android",
+  "platformVersion": "9.0",
+  "deviceName": "Android Emulator",
+  "browserName": "",
+  "deviceOrientation" : "Portrait",
+  "appiumVersion" : "1.17.0",
+  "app": "/path/to/my.app"
+}

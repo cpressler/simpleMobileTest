@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>simplemobile-qatest</name>
+    <name>simplemobiletest</name>
     <description>Demo project for Testing a mobile app</description>
 
     <properties>
@@ -34,6 +34,18 @@
                 <version>${junit.vesion}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <optional>true</optional>
+                <version>1.18.12</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -67,9 +79,16 @@
             <version>0.6.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
     </dependencies>
-
-
 
     <build>
         <pluginManagement>
@@ -87,6 +106,10 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -134,10 +157,72 @@
 <!--                    </includes>-->
 <!--                </configuration>-->
             </plugin>
-
         </plugins>
     </build>
 
     <profiles>
+<!--        <profile>-->
+<!--            <id>integration-tests</id>-->
+<!--            <properties>-->
+<!--                &lt;!&ndash; onyl run integration tests and not unit tests here &ndash;&gt;-->
+
+<!--                <skip.unit.tests>true</skip.unit.tests>-->
+<!--                <skip.integration.tests>false</skip.integration.tests>-->
+<!--            </properties>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    &lt;!&ndash; Setup/Teardown Docker environment for Integration Tests &ndash;&gt;-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.codehaus.mojo</groupId>-->
+<!--                        <artifactId>exec-maven-plugin</artifactId>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>docker-compose-up</id>-->
+<!--                                <phase>generate-test-resources</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>exec</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <executable>${project.basedir}/setup/scripts/appium-up.sh</executable>-->
+<!--                                    <arguments>-->
+<!--                                        <argument>${project.version}</argument>-->
+<!--                                    </arguments>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                            <execution>-->
+<!--                                <id>integration-tests</id>-->
+<!--                                <phase>integration-test</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>exec</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <executable>newman</executable> &lt;!&ndash; install first npm install -g newman &ndash;&gt;-->
+<!--                                    <commandlineArgs>-->
+<!--                                        run src/test/resources/postman/GroupsApi.postman_collection.json -e   src/test/resources/postman/envs/${postman.env}.postman_environment.json-->
+<!--                                    </commandlineArgs>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                            <execution>-->
+<!--                                <id>docker-compose-down</id>-->
+<!--                                <phase>post-integration-test</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>exec</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <executable>${project.basedir}/docker/scripts/docker-down.sh</executable>-->
+<!--                                    <arguments>-->
+<!--                                        <argument></argument>-->
+<!--                                    </arguments>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+
+<!--                        </executions>-->
+<!--                    </plugin>-->
+
+<!--                    &lt;!&ndash; Deploy current build artifact to Docker container &ndash;&gt;-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
+
     </profiles>
 </project>

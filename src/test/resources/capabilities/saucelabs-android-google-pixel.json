@@ -1,0 +1,11 @@
+{
+  "platformName": "Android",
+  "platformVersion": "9",
+  "deviceName": ".*Google.*",
+  "browserName": "",
+  "deviceOrientation": "Portrait",
+  "testobject_api_key":"C3DEA0C0E09840D687568265B888227C",
+  "testobject_app_id":"1",
+  "testobject_suite_name": "simpleMobile Appium Suite",
+  "testobject_test_name":  "simpleMobile Login  Test"
+}
