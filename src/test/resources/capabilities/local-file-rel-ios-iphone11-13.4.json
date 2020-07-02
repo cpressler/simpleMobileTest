@@ -1,10 +1,11 @@
 {
   "platformName": "iOS",
-  "platformVersion": "13.4",
+  "platformVersion": "13.3",
   "deviceName": "iPhone 11",
   "browserName": "",
   "orientation" : "PORTRAIT",
   "automationName": "XCUITest",
   "udid" : "82222790-8452-40A2-8415-9D9878A8D6C7",
-  "app": "src/test/resources/ios/myApp.zip"
+  "newCommandTimeout": 30,
+  "app": "../../gilead/mobileapp-appium-helper/src/test/resources/ios/myApp.zip"
 }

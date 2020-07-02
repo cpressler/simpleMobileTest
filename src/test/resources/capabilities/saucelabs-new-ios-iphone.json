@@ -1,0 +1,8 @@
+{
+  "platformName": "iOS",
+  "platformVersion": "13.4.1",
+  "deviceName": "iPhone 6",
+  "app": "sauce-storage:AppiumTest.zip",
+  "username": "wgentry",
+  "accessKey": "5a215b5e-c9a2-4041-92d3-9c4a39a4c3e7"
+}

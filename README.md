@@ -133,6 +133,17 @@ $ANDROID_HOME/tools/emulator -avd Nexus_S_API_28 & << must have this defined in 
  * mvn test -Dplatform=ios -Dtestsite=local  -Dcapability=capabilities/local-ios-iphone11-13.4.json
  * mvn test -Dplatform=ios -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-ios-iphone.json ( not working yet)
 
+## Running the test in Intellij
+ For each configuration you need to define system properties in the configuratio settings
+ 
+ Add somthing like this to the VM arguments  Run menu -> Edit Configurations 
+ -Dplatform=android -Dtestsite=local -Dcapability=capabilities/local-android-nexus-s-api28.json
+ 
+ or 
+ -Dplatform=android -Dtestsite=saucelabs -Dcapability=capabilities/saucelabs-android-google-pixel.json
+ 
+ or 
+ -Dplatform=ios -Dtestsite=local -Dcapability=capabilities/local-ios-iphone11-13.4.json
 
 #### Example python tests
 There are also a couple of python tests in this project as as reference also   

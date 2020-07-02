@@ -1,19 +1,13 @@
 package com.softvision.simplemobile;
-import com.softvision.simplemobile.setup.AndroidPlatform;
 import com.softvision.simplemobile.setup.GenericPlatform;
-import com.softvision.simplemobile.setup.IOSPlatform;
-import com.softvision.simplemobile.setup.TestCapabilityResource;
-import com.softvision.simplemobile.util.CommandLineProcess;
+import com.softvision.simplemobile.util.PlatformTestConfigurator;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
-import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.Ignore;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import static java.lang.Thread.sleep;
 
@@ -39,63 +33,28 @@ import static org.junit.Assert.assertNotEquals;
 public class LoginTest {
     static DesiredCapabilities capabilities;
     static MobileDriver mobileDriver;
-    private static String testLocation = "local";
-    private static String testCapabilityFile = "capabilities/local-android-nexus-s-api28.json";
-    private static String mobilePlatform = "android";
     private static GenericPlatform genericPlatform;
-    private static CommandLineProcess commandLineProcess = new CommandLineProcess();
+    private static PlatformTestConfigurator platformTestConfigurator = new PlatformTestConfigurator();
 
     @BeforeClass
-    public static void initProcessCommandLine() throws IOException {
+    public static void initProcessCommandLine() throws Exception {
 
-        commandLineProcess.process(); // process properties passed on command line
+        platformTestConfigurator.process(); // process properties passed on command line
+        platformTestConfigurator.setupTestEnvironment();
+        platformTestConfigurator.startDriver();
 
-
-        if ( commandLineProcess.getPlatform() != null ) {
-            mobilePlatform = commandLineProcess.getPlatform();
-        }
-        if ( commandLineProcess.getTestsite() != null ) {
-            testLocation = commandLineProcess.getTestsite();
-        }
-        if ( commandLineProcess.getCapability() != null ) {
-            testCapabilityFile = commandLineProcess.getCapability();
-        }
-
-        if ( "android".equalsIgnoreCase(mobilePlatform)){
-            initAndroid(testLocation, testCapabilityFile);
-        } else if ( "ios".equalsIgnoreCase(mobilePlatform)){
-            initIOS(testLocation, testCapabilityFile);
-        } else {
-            System.out.println("mobilePlatform is not valid. ios or android are acdeptable values");
-        }
+        mobileDriver = platformTestConfigurator.getMobileDriver();
+        genericPlatform = platformTestConfigurator.getGenericPlatform();
         mobileDriver.resetApp();
     }
 
-    public static void initIOS(String testLocation, String testCapabilityFile) throws MalformedURLException {
-        genericPlatform = new IOSPlatform();
-        //genericPlatform = iosPlatform;
-        System.out.println("initIOS() method called");
-
-
-        capabilities = genericPlatform.getCapabilities(testCapabilityFile);
-        mobileDriver = genericPlatform.getDriver(testLocation,capabilities);
-    }
-
-    public static void initAndroid(String testLocation, String testCapabilityFile) throws MalformedURLException {
-        System.out.println("initAndroid() method called");
-        genericPlatform = new AndroidPlatform();
-        //genericPlatform = androidPlatform;
-
-        capabilities = genericPlatform.getCapabilities(testCapabilityFile);
-        mobileDriver = genericPlatform.getDriver(testLocation,capabilities);
-    }
-
     @AfterClass
-    public static void afterTest( ) {
-        mobileDriver.quit();
+    public static void afterTest( ) throws Exception {
+        platformTestConfigurator.processExit();
     }
 
 
+    @Ignore
     @Test
     public void emailFieldInput() throws InterruptedException {
 
@@ -110,6 +69,7 @@ public class LoginTest {
         assertEquals(fieldValue , "validEmail");
     }
 
+    @Ignore
     @Test
     public void passwordFieldInput() throws InterruptedException {
         mobileDriver.resetApp();
